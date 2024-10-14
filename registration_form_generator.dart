@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+void main() {
+  runApp(MyApp());
+}
 
-class RegistrationFormGenerator extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,7 +18,7 @@ class RegistrationFormGenerator extends StatelessWidget {
           ),
         ),
       ),
-      home: RegisterPage(),  // Use RegisterPage from the imported file
+      home: RegisterPage(),
     );
   }
 }
@@ -51,8 +54,8 @@ class _RegisterPageState extends State<RegisterPage> {
           children: <Widget>[
             buildTextFormField(_firstNameController, 'First Name', 12),
             buildTextFormField(_lastNameController, 'Last Name', 12),
-            buildTextFormField(_emailController, 'Email Address', 12),
-            buildTextFormField(_phoneController, 'Phone Number', 12, 'Phone Number'),
+            buildTextFormField(_emailController, 'Email Address', 12, emailValidation: true),
+            buildTextFormField(_phoneController, 'Phone Number', 12, phoneValidation: true),
             buildTextFormField(_timeSlotController, 'Time Slot', 12),
             buildTextFormField(_allergiesController, 'Allergies / Dietary Requirements', 12),
             ListTile(
@@ -70,7 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromRGBO(102, 89, 175, 1),
+                  backgroundColor: const Color.fromARGB(255, 102, 89, 175),
                   foregroundColor: Colors.white,
                 ),
                 onPressed: () {
@@ -87,9 +90,8 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Padding buildTextFormField(
-      TextEditingController controller, String label, double spacing,
-      [String? hint]) {
+  Padding buildTextFormField(TextEditingController controller, String label, double spacing,
+      {String? hint, bool emailValidation = false, bool phoneValidation = false}) {
     return Padding(
       padding: EdgeInsets.only(bottom: spacing),
       child: TextFormField(
@@ -99,14 +101,29 @@ class _RegisterPageState extends State<RegisterPage> {
           hintText: hint,
           border: OutlineInputBorder(),
         ),
+        keyboardType: phoneValidation ? TextInputType.phone : TextInputType.text,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter $label';
+          } else if (emailValidation && !_isValidEmail(value)) {
+            return 'Please enter a valid email address';
+          } else if (phoneValidation && !_isValidPhoneNumber(value)) {
+            return 'Please enter a valid phone number';
           }
           return null;
         },
       ),
     );
+  }
+
+  bool _isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    return emailRegex.hasMatch(email);
+  }
+
+  bool _isValidPhoneNumber(String phone) {
+    final phoneRegex = RegExp(r'^\d{10}$'); // Simple validation for 10-digit phone numbers
+    return phoneRegex.hasMatch(phone);
   }
 }
 
@@ -139,8 +156,7 @@ class _LabeledSwitchState extends State<LabeledSwitch> {
         child: Stack(
           children: <Widget>[
             AnimatedAlign(
-              alignment:
-                  widget.value ? Alignment.centerLeft : Alignment.centerRight,
+              alignment: widget.value ? Alignment.centerLeft : Alignment.centerRight,
               duration: Duration(milliseconds: 250),
               curve: Curves.linear,
               child: Container(
@@ -166,7 +182,8 @@ class _LabeledSwitchState extends State<LabeledSwitch> {
                       )
                     : Text('No',
                         style: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.bold)),
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold)),
               ),
             ),
           ],
