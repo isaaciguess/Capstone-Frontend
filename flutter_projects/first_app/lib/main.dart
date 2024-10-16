@@ -4,6 +4,7 @@ void main() {
   runApp(MyApp());
 }
 
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -33,12 +34,25 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _receiveEmailUpdates = false;
 
   // Text editing controllers
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _timeSlotController = TextEditingController();
-  final TextEditingController _allergiesController = TextEditingController();
+  final Map<String, TextEditingController> _controllers = {
+    'firstName': TextEditingController(),
+    'lastName': TextEditingController(),
+    'email': TextEditingController(),
+    'phone': TextEditingController(),
+    'timeSlot': TextEditingController(),
+    'allergies': TextEditingController(),
+  };
+
+  // The FieldConfig class is designed to encapsulate the properties of each form field in your registration form.
+  // This class serves as a blueprint for creating individual field configurations, making it easier to manage and generate form fields dynamically.
+  final List<FieldConfig> _fields = [
+    FieldConfig(label: 'First Name', key: 'firstName'),
+    FieldConfig(label: 'Last Name', key: 'lastName'),
+    FieldConfig(label: 'Email Address', key: 'email', validationType: ValidationType.email),
+    FieldConfig(label: 'Phone Number', key: 'phone', validationType: ValidationType.phone),
+    FieldConfig(label: 'Time Slot', key: 'timeSlot'),
+    FieldConfig(label: 'Allergies / Dietary Requirements', key: 'allergies'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -52,12 +66,7 @@ class _RegisterPageState extends State<RegisterPage> {
         child: ListView(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           children: <Widget>[
-            buildTextFormField(_firstNameController, 'First Name', 12),
-            buildTextFormField(_lastNameController, 'Last Name', 12),
-            buildTextFormField(_emailController, 'Email Address', 12, emailValidation: true),
-            buildTextFormField(_phoneController, 'Phone Number', 12, phoneValidation: true),
-            buildTextFormField(_timeSlotController, 'Time Slot', 12),
-            buildTextFormField(_allergiesController, 'Allergies / Dietary Requirements', 12),
+            ..._fields.map((field) => buildTextFormField(field)),
             ListTile(
               title: Text('Receive Email Updates?'),
               trailing: LabeledSwitch(
@@ -89,25 +98,28 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+//FieldConfig Class: Represents each form field, with properties for label, key, and validationType.
 
-  Padding buildTextFormField(TextEditingController controller, String label, double spacing,
-      {String? hint, bool emailValidation = false, bool phoneValidation = false}) {
+//List of Fields: The _fields list holds the configurations for each form field.
+
+//Dynamic Form Generation: The buildTextFormField method is now called in a map function, iterating over the _fields list to generate the form fields dynamically.
+
+  Padding buildTextFormField(FieldConfig field) {
     return Padding(
-      padding: EdgeInsets.only(bottom: spacing),
+      padding: EdgeInsets.only(bottom: 12.0),
       child: TextFormField(
-        controller: controller,
+        controller: _controllers[field.key],
         decoration: InputDecoration(
-          labelText: label,
-          hintText: hint,
+          labelText: field.label,
           border: OutlineInputBorder(),
         ),
-        keyboardType: phoneValidation ? TextInputType.phone : TextInputType.text,
+        keyboardType: field.validationType == ValidationType.phone ? TextInputType.phone : TextInputType.text,
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Please enter $label';
-          } else if (emailValidation && !_isValidEmail(value)) {
+            return 'Please enter ${field.label}';
+          } else if (field.validationType == ValidationType.email && !_isValidEmail(value)) {
             return 'Please enter a valid email address';
-          } else if (phoneValidation && !_isValidPhoneNumber(value)) {
+          } else if (field.validationType == ValidationType.phone && !_isValidPhoneNumber(value)) {
             return 'Please enter a valid phone number';
           }
           return null;
@@ -126,6 +138,17 @@ class _RegisterPageState extends State<RegisterPage> {
     return phoneRegex.hasMatch(phone);
   }
 }
+  // The FieldConfig class is designed to encapsulate the properties of each form field in your registration form.
+  // This class serves as a blueprint for creating individual field configurations, making it easier to manage and generate form fields dynamically.
+class FieldConfig {
+  final String label;   // The display label for the field.
+  final String key;   // A unique identifier for the field (used for the controller).
+  final ValidationType? validationType;  //A flag to indicate if this field requires  validation.
+
+  FieldConfig({required this.label, required this.key, this.validationType});
+}
+
+enum ValidationType { email, phone }
 
 class LabeledSwitch extends StatefulWidget {
   final bool value;
