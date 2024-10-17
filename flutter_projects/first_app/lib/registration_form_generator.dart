@@ -41,12 +41,12 @@ class _RegisterPageState extends State<RegisterPage> {
   // The FieldConfig class is designed to encapsulate the properties of each form field in your registration form.
   // This class serves as a blueprint for creating individual field configurations, making it easier to manage and generate form fields dynamically.
   final List<FieldConfig> _fields = [
-    FieldConfig(label: 'First Name', key: 'firstName'),
-    FieldConfig(label: 'Last Name', key: 'lastName'),
+    FieldConfig(label: 'First Name', key: 'firstName', validationType: ValidationType.name),
+    FieldConfig(label: 'Last Name', key: 'lastName', validationType: ValidationType.name),
     FieldConfig(label: 'Email Address', key: 'email', validationType: ValidationType.email),
     FieldConfig(label: 'Phone Number', key: 'phone', validationType: ValidationType.phone),
-    FieldConfig(label: 'Time Slot', key: 'timeSlot'),
-    FieldConfig(label: 'Allergies / Dietary Requirements', key: 'allergies'),
+    FieldConfig(label: 'Time Slot', key: 'timeSlot', validationType: ValidationType.timeslot),
+    FieldConfig(label: 'Allergies / Dietary Requirements', key: 'allergies', validationType: ValidationType.alphabets),
   ];
 
   @override
@@ -93,11 +93,6 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-//FieldConfig Class: Represents each form field, with properties for label, key, and validationType.
-
-//List of Fields: The _fields list holds the configurations for each form field.
-
-//Dynamic Form Generation: The buildTextFormField method is now called in a map function, iterating over the _fields list to generate the form fields dynamically.
 
   Padding buildTextFormField(FieldConfig field) {
     return Padding(
@@ -116,6 +111,12 @@ class _RegisterPageState extends State<RegisterPage> {
             return 'Please enter a valid email address';
           } else if (field.validationType == ValidationType.phone && !_isValidPhoneNumber(value)) {
             return 'Please enter a valid phone number';
+          } else if (field.validationType == ValidationType.name && !_isValidName(value)) {
+            return 'Please enter only alphabets for ${field.label}';
+          } else if (field.validationType == ValidationType.timeslot && !_isValidTimeSlot(value)) {
+            return 'Time slot must contain only letters and numbers';
+          } else if (field.validationType == ValidationType.alphabets && !_isAlphabetsOnly(value)) {
+            return 'Please enter only alphabets for ${field.label}';
           }
           return null;
         },
@@ -132,18 +133,33 @@ class _RegisterPageState extends State<RegisterPage> {
     final phoneRegex = RegExp(r'^\d{10}$'); // Simple validation for 10-digit phone numbers
     return phoneRegex.hasMatch(phone);
   }
+//First Name and Last Name Validation: Ensures only alphabet characters are allowed (_isValidName).
+  bool _isValidName(String name) {
+    final nameRegex = RegExp(r'^[a-zA-Z]+$');
+    return nameRegex.hasMatch(name);
+  }
+//Time Slot Validation: Accepts only alphanumeric characters (_isValidTimeSlot).
+
+  bool _isValidTimeSlot(String timeSlot) {
+    final timeSlotRegex = RegExp(r'^[a-zA-Z0-9]+$');
+    return timeSlotRegex.hasMatch(timeSlot);
+  }
+//Allergies/Dietary Requirements Validation: Accepts only alphabet characters (_isAlphabetsOnly).
+  bool _isAlphabetsOnly(String value) {
+    final alphabetsRegex = RegExp(r'^[a-zA-Z\s]+$');
+    return alphabetsRegex.hasMatch(value);
+  }
 }
-  // The FieldConfig class is designed to encapsulate the properties of each form field in your registration form.
-  // This class serves as a blueprint for creating individual field configurations, making it easier to manage and generate form fields dynamically.
+
 class FieldConfig {
   final String label;   // The display label for the field.
   final String key;   // A unique identifier for the field (used for the controller).
-  final ValidationType? validationType;  //A flag to indicate if this field requires  validation.
+  final ValidationType? validationType;  //A flag to indicate if this field requires validation.
 
   FieldConfig({required this.label, required this.key, this.validationType});
 }
 
-enum ValidationType { email, phone }
+enum ValidationType { email, phone, name, timeslot, alphabets }
 
 class LabeledSwitch extends StatefulWidget {
   final bool value;
