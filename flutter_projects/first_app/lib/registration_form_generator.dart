@@ -27,6 +27,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _receiveEmailUpdates = false;
+  bool _isSubmitting = false; // A flag to indicate if the form is currently being submitted.
 
   // Text editing controllers
   final Map<String, TextEditingController> _controllers = {
@@ -80,18 +81,36 @@ class _RegisterPageState extends State<RegisterPage> {
                   backgroundColor: const Color.fromARGB(255, 102, 89, 175),
                   foregroundColor: Colors.white,
                 ),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // Process data or navigate to the payment screen
-                  }
-                },
-                child: Text('PROCEED TO PAYMENT'),
+                onPressed: _isSubmitting
+                    ? null // Disable the button if the form is currently being submitted
+                    : () {
+                        if (_formKey.currentState!.validate()) {
+                          setState(() {
+                            _isSubmitting = true;
+                          }); // Set the flag to indicate that the form is being submitted
+                          _submitForm(); // Call the submission method
+                        }
+                      },
+                child: _isSubmitting
+                    ? CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      )
+                    : Text('PROCEED TO PAYMENT'),
               ),
             ),
           ],
         ),
       ),
     );
+  }
+
+  // Mock form submission method
+  void _submitForm() async {
+    await Future.delayed(Duration(seconds: 1)); // Simulate a network request or processing delay
+    setState(() {
+      _isSubmitting = false; // Re-enable the button after submission
+    });
+    // Optionally, navigate to another screen or perform additional actions here
   }
 
   Padding buildTextFormField(FieldConfig field) {
@@ -103,7 +122,9 @@ class _RegisterPageState extends State<RegisterPage> {
           labelText: field.label,
           border: OutlineInputBorder(),
         ),
-        keyboardType: field.validationType == ValidationType.phone ? TextInputType.phone : TextInputType.text,
+        keyboardType: field.validationType == ValidationType.phone
+            ? TextInputType.phone
+            : TextInputType.text,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return 'Please enter ${field.label}';
@@ -133,18 +154,20 @@ class _RegisterPageState extends State<RegisterPage> {
     final phoneRegex = RegExp(r'^\d{10}$'); // Simple validation for 10-digit phone numbers
     return phoneRegex.hasMatch(phone);
   }
-//First Name and Last Name Validation: Ensures only alphabet characters are allowed (_isValidName).
+
+  // First Name and Last Name Validation: Ensures only alphabet characters are allowed (_isValidName).
   bool _isValidName(String name) {
     final nameRegex = RegExp(r'^[a-zA-Z]+$');
     return nameRegex.hasMatch(name);
   }
-//Time Slot Validation: Accepts only alphanumeric characters (_isValidTimeSlot).
 
+  // Time Slot Validation: Accepts only alphanumeric characters (_isValidTimeSlot).
   bool _isValidTimeSlot(String timeSlot) {
     final timeSlotRegex = RegExp(r'^[a-zA-Z0-9]+$');
     return timeSlotRegex.hasMatch(timeSlot);
   }
-//Allergies/Dietary Requirements Validation: Accepts only alphabet characters (_isAlphabetsOnly).
+
+  // Allergies/Dietary Requirements Validation: Accepts only alphabet characters (_isAlphabetsOnly).
   bool _isAlphabetsOnly(String value) {
     final alphabetsRegex = RegExp(r'^[a-zA-Z\s]+$');
     return alphabetsRegex.hasMatch(value);
@@ -152,9 +175,9 @@ class _RegisterPageState extends State<RegisterPage> {
 }
 
 class FieldConfig {
-  final String label;   // The display label for the field.
-  final String key;   // A unique identifier for the field (used for the controller).
-  final ValidationType? validationType;  //A flag to indicate if this field requires validation.
+  final String label; // The display label for the field.
+  final String key; // A unique identifier for the field (used for the controller).
+  final ValidationType? validationType; // A flag to indicate if this field requires validation.
 
   FieldConfig({required this.label, required this.key, this.validationType});
 }
