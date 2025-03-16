@@ -1,8 +1,6 @@
-import 'package:first_app/registration_form_generator.dart';
 import 'package:flutter/material.dart';
+import 'app.dart';
 
 void main() {
-  runApp(RegistrationFormGenerator());
+  runApp(const BasicReportGenerator());
 }
-
-

@@ -30,6 +30,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  path_provider: ^2.1.1
+  pdf: ^3.10.4
+  csv: ^5.1.1
+  share_plus: ^7.1.0
+  intl: ^0.18.1
+  permission_handler: ^10.4.3  # For Android permissions
 
 
   # The following adds the Cupertino Icons font to your application.
