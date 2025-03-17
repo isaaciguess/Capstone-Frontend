@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ffi';
 import "package:first_app/network/dio_client.dart";
 import "package:flutter_secure_storage/flutter_secure_storage.dart";
+import "package:first_app/models/user.dart";
 
 
 String? accessToken;
@@ -50,23 +51,24 @@ Future<void> refreshToken() async{
   try
   {
     final response = await dioClient.dio.post("/auth/refresh-token");
-    response.statusCode == 200 ? print("Login successful!") : print("Login failed: ${response.data}");
+    response.statusCode == 200 ? print("Token refresh successful") : print("Token refresh failed: ${response.data}");
   } catch (error){
     print("Error refreshing token: $error");
   }
 }
 
 
-Future<void> registerUser(Struct data) async{
-  try
-  {
-    final response = await dioClient.dio.post("/auth/register");
-
-    
-  }
-  catch(error)
-  {
-
+// TO DO ADD PROPER SUCESSFUL RESPONSE HANDLING
+Future<void> registerUser(User data) async{
+  try {
+    final response = await dioClient.dio.post("/auth/register", data: data.toJson());
+    if (response.statusCode == 200) {
+      print("User registered successfully!");
+    } else {
+      print("User registration failed");
+    }
+  } catch (error) {
+    print("Error registering user: $error");
   }
 }
 

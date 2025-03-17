@@ -1,5 +1,3 @@
-
-
 class User{
   final String firstName;
   final String lastName;
@@ -20,12 +18,11 @@ class User{
   Map<String, dynamic> toJson()
   {
     return {
-      "firstName": firstName,
-      "lastName": lastName,
       "email": email,
       "password": password,
-      if (phoneNo == null) "phoneNo": "" else "phoneNo": phoneNo,
-      "role": role,
+      "firstName": firstName,
+      "lastName": lastName,
+      if (phoneNo == null) "phoneNo": " " else "phoneNo": phoneNo
     };
   }
 }
