@@ -121,17 +121,15 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   void _onContinue() {
-    final eventName = _eventNameController.text;
-    final location = _locationController.text;
+    final eventName = _eventNameController.text.trim();
+    final location = _locationController.text.trim();
     final date = _selectedDate;
     final time = _selectedTime;
 
     // Basic validation
     if (eventName.isEmpty || location.isEmpty || date == null || time == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill out all fields!'),
-        ),
+        const SnackBar(content: Text('Please fill out all fields!')),
       );
       return;
     }
