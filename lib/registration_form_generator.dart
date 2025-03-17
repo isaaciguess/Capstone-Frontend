@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class RegistrationFormGenerator extends StatelessWidget {
   const RegistrationFormGenerator({super.key});
@@ -7,10 +6,7 @@ class RegistrationFormGenerator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Registration App',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -26,25 +22,26 @@ class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   bool _receiveEmailUpdates = false;
   bool _isSubmitting = false;
   bool _isGroupRegistration = false;
   int _groupSize = 1;
-
   final List<Map<String, TextEditingController>> _controllers = [];
+  // This list will store the registration type for each member.
+  List<String> _selectedTypes = [];
 
-  final List<FieldConfig> _fields = [
-    FieldConfig(label: 'First Name', key: 'firstName', validationType: ValidationType.name),
-    FieldConfig(label: 'Last Name', key: 'lastName', validationType: ValidationType.name),
-    FieldConfig(label: 'Email Address', key: 'email', validationType: ValidationType.email),
-    FieldConfig(label: 'Phone Number', key: 'phone', validationType: ValidationType.phone),
-    FieldConfig(label: 'Time Slot', key: 'timeSlot', validationType: ValidationType.timeslot),
-    FieldConfig(label: 'Allergies / Dietary Requirements', key: 'allergies', validationType: ValidationType.alphabets),
+  final List<String> _fieldNames = [
+    'First Name',
+    'Last Name',
+    'Email Address',
+    'Phone Number',
+    'Time Slot',
+    'Allergies / Dietary Requirements',
   ];
 
   @override
@@ -55,46 +52,128 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void _initializeControllers() {
     _controllers.clear();
+    _selectedTypes.clear();
     for (int i = 0; i < _groupSize; i++) {
       _controllers.add({
-        'firstName': TextEditingController(),
-        'lastName': TextEditingController(),
+        'firstname': TextEditingController(),
+        'lastname': TextEditingController(),
         'email': TextEditingController(),
         'phone': TextEditingController(),
-        'timeSlot': TextEditingController(),
+        'timeslot': TextEditingController(),
         'allergies': TextEditingController(),
       });
+      // Set default registration type to "Adult" for each member.
+      _selectedTypes.add('Adult');
     }
+  }
+
+  // Calculate the total price based on each member's type.
+  int getTotalPrice() {
+    int total = 0;
+    for (String type in _selectedTypes) {
+      if (type == 'Adult') {
+        total += 80;
+      } else {
+        total += 40; // 50% off for Senior and Minor
+      }
+    }
+    return total;
+  }
+
+  Future<void> _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isSubmitting = true);
+      // Process form submission here (for example, send data to a server)
+      await Future.delayed(const Duration(seconds: 1));
+      setState(() => _isSubmitting = false);
+    }
+  }
+
+  Widget _buildTextFormField(String field, int memberIndex) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: TextFormField(
+        controller: _controllers[memberIndex][field.toLowerCase().replaceAll(' ', '')],
+        decoration: InputDecoration(
+          labelText: field,
+          border: const OutlineInputBorder(),
+        ),
+        keyboardType: field == 'Phone Number'
+            ? TextInputType.phone
+            : TextInputType.text,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter $field';
+          }
+          if (field == 'Phone Number' && !RegExp(r'^\d{10}$').hasMatch(value)) {
+            return 'Enter valid phone number (10 digits)';
+          }
+          if (field == 'Email Address' &&
+              !RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+                  .hasMatch(value)) {
+            return 'Enter a valid email address';
+          }
+          return null;
+        },
+      ),
+    );
+  }
+
+  Widget _buildRegistrationTypeDropdown(int memberIndex) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: DropdownButtonFormField<String>(
+        value: _selectedTypes[memberIndex],
+        items: ['Adult', 'Senior', 'Minor']
+            .map((type) => DropdownMenuItem(
+                  value: type,
+                  child: Text(type),
+                ))
+            .toList(),
+        onChanged: (value) {
+          setState(() {
+            _selectedTypes[memberIndex] = value!;
+          });
+        },
+        decoration: const InputDecoration(
+          labelText: 'Registration Type',
+          border: OutlineInputBorder(),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Register for\nMelbourne Italian Festa 2024"),
+        title: const Text("Register for Melbourne Italian Festa 2024"),
         backgroundColor: Colors.white,
       ),
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          children: <Widget>[
+          children: [
             SwitchListTile(
               title: const Text("Group Registration"),
               value: _isGroupRegistration,
-              onChanged: (bool value) {
+              onChanged: (value) {
                 setState(() {
                   _isGroupRegistration = value;
-                  if (_isGroupRegistration) {
-                    _initializeControllers();
-                  }
+                  // Reset group size to 1 if group registration is disabled.
+                  _groupSize = value ? _groupSize : 1;
+                  _initializeControllers();
                 });
               },
             ),
             if (_isGroupRegistration)
               TextFormField(
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(labelText: 'Number of People in Group'),
+                decoration: const InputDecoration(
+                  labelText: 'Number of People in Group',
+                  border: OutlineInputBorder(),
+                ),
                 onChanged: (value) {
                   setState(() {
                     _groupSize = int.tryParse(value) ?? 1;
@@ -102,46 +181,60 @@ class _RegisterPageState extends State<RegisterPage> {
                   });
                 },
                 validator: (value) {
-                  if (value == null || value.isEmpty || int.tryParse(value) == null || int.parse(value) < 1) {
+                  if (value == null ||
+                      value.isEmpty ||
+                      int.tryParse(value) == null ||
+                      int.parse(value) < 1) {
                     return 'Enter a valid group size';
                   }
                   return null;
                 },
               ),
-            ...List.generate(
-              _groupSize,
-              (index) => Column(
+            ...List.generate(_groupSize, (index) {
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Member ${index + 1}', style: TextStyle(fontWeight: FontWeight.bold)),
-                  ..._fields.map((field) => buildTextFormField(field, index)),
+                  Text(
+                    'Member ${index + 1}',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  ..._fieldNames.map((field) => _buildTextFormField(field, index)),
+                  _buildRegistrationTypeDropdown(index),
                   const SizedBox(height: 20),
                 ],
+              );
+            }),
+            // Display the total price based on the registration type for each member.
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: Text(
+                'Total Price: \$${getTotalPrice()}',
+                style: const TextStyle(
+                    fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
-            ListTile(
+            SwitchListTile(
               title: const Text('Receive Email Updates?'),
-              trailing: Switch(
-                value: _receiveEmailUpdates,
-                onChanged: (bool value) {
-                  setState(() {
-                    _receiveEmailUpdates = value;
-                  });
-                },
-              ),
+              value: _receiveEmailUpdates,
+              onChanged: (value) {
+                setState(() {
+                  _receiveEmailUpdates = value;
+                });
+              },
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 102, 89, 175),
+                  backgroundColor:
+                      const Color.fromARGB(255, 102, 89, 175),
                   foregroundColor: Colors.white,
                 ),
                 onPressed: _isSubmitting ? null : _submitForm,
                 child: _isSubmitting
                     ? const CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      )
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.white))
                     : const Text('PROCEED TO PAYMENT'),
               ),
             ),
@@ -150,65 +243,4 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-
-  void _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isSubmitting = true;
-      });
-      await Future.delayed(const Duration(seconds: 1));
-      setState(() {
-        _isSubmitting = false;
-      });
-    }
-  }
-
-  Padding buildTextFormField(FieldConfig field, int memberIndex) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
-      child: TextFormField(
-        controller: _controllers[memberIndex][field.key],
-        decoration: InputDecoration(
-          labelText: field.label,
-          border: const OutlineInputBorder(),
-        ),
-        keyboardType: field.validationType == ValidationType.phone
-            ? TextInputType.phone
-            : TextInputType.text,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter ${field.label}';
-          }
-
-          if (field.validationType == ValidationType.phone) {
-            // Phone number validation: checks if it contains only digits and has 10 digits.
-            final phoneRegex = RegExp(r'^\d{10}$');
-            if (!phoneRegex.hasMatch(value)) {
-              return 'Please enter valid phone number (10 digits)';
-            }
-          }
-
-          if (field.validationType == ValidationType.email) {
-            // Email validation: checks if the email format is valid.
-            final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-            if (!emailRegex.hasMatch(value)) {
-              return 'Please enter valid email address';
-            }
-          }
-
-          return null;
-        },
-      ),
-    );
-  }
 }
-
-class FieldConfig {
-  final String label;
-  final String key;
-  final ValidationType? validationType;
-
-  FieldConfig({required this.label, required this.key, this.validationType});
-}
-
-enum ValidationType { email, phone, name, timeslot, alphabets }
