@@ -1,6 +1,5 @@
+import 'package:first_app/additional_pricing_information.dart';
 import 'package:flutter/material.dart';
-// ignore: library_prefixes
-import 'edit_bank_information_page.dart' as editBankPage2;
 
 class EditPriceInformationPage extends StatefulWidget {
   final String eventName;
@@ -36,7 +35,7 @@ class _EditPriceInformationPageState extends State<EditPriceInformationPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Base Price Field
+            // Base Price
             TextField(
               controller: _priceController,
               keyboardType: TextInputType.number,
@@ -44,7 +43,7 @@ class _EditPriceInformationPageState extends State<EditPriceInformationPage> {
                 labelText: 'Base Price',
                 border: OutlineInputBorder(),
               ),
-              enabled: !_isFree, // disable if event is free
+              enabled: !_isFree,
             ),
             const SizedBox(height: 16),
 
@@ -55,7 +54,6 @@ class _EditPriceInformationPageState extends State<EditPriceInformationPage> {
                 const Text('Group Signup'),
                 Row(
                   children: [
-                    // Yes Button
                     ElevatedButton(
                       onPressed: () {
                         setState(() => _groupSignup = true);
@@ -68,7 +66,6 @@ class _EditPriceInformationPageState extends State<EditPriceInformationPage> {
                       child: const Text('Yes'),
                     ),
                     const SizedBox(width: 8),
-                    // No Button
                     ElevatedButton(
                       onPressed: () {
                         setState(() => _groupSignup = false);
@@ -86,7 +83,7 @@ class _EditPriceInformationPageState extends State<EditPriceInformationPage> {
             ),
             const SizedBox(height: 16),
 
-            // My Event Will Be Free Button
+            // Free Event
             ElevatedButton(
               onPressed: () {
                 setState(() {
@@ -98,7 +95,7 @@ class _EditPriceInformationPageState extends State<EditPriceInformationPage> {
             ),
             const SizedBox(height: 24),
 
-            // Continue Button
+            // Continue
             ElevatedButton(
               onPressed: _onContinue,
               child: const Text('Continue'),
@@ -113,11 +110,11 @@ class _EditPriceInformationPageState extends State<EditPriceInformationPage> {
     // Determine the final base price
     final basePrice = _isFree ? 0 : double.tryParse(_priceController.text) ?? 0;
 
-    // Navigate to the Edit Bank Information Page
+    // Navigate to AdditionalPricingOptionsPage
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => editBankPage2.EditBankInformationPage(
+        builder: (context) => AdditionalPricingOptionsPage(
           eventName: widget.eventName,
           location: widget.location,
           date: widget.date,

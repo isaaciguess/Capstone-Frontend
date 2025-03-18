@@ -2,18 +2,15 @@ import 'package:flutter/material.dart';
 import 'edit_price_information_page.dart';
 
 class CreateEventPage extends StatefulWidget {
-  const CreateEventPage({Key? key}) : super(key: key);
+  const CreateEventPage({super.key});
 
   @override
   State<CreateEventPage> createState() => _CreateEventPageState();
 }
 
 class _CreateEventPageState extends State<CreateEventPage> {
-  // Controllers for text fields
   final TextEditingController _eventNameController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
-
-  // Variables to store selected date and time
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
 
@@ -27,7 +24,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Event Name Field
+            // Event Name
             TextField(
               controller: _eventNameController,
               decoration: const InputDecoration(
@@ -37,7 +34,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
             ),
             const SizedBox(height: 16),
 
-            // Location Field
+            // Location
             TextField(
               controller: _locationController,
               decoration: const InputDecoration(
@@ -47,7 +44,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
             ),
             const SizedBox(height: 16),
 
-            // Select Date
+            // Date
             Row(
               children: [
                 Expanded(
@@ -65,7 +62,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
             ),
             const SizedBox(height: 16),
 
-            // Select Time
+            // Time
             Row(
               children: [
                 Expanded(
@@ -83,7 +80,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
             ),
             const SizedBox(height: 24),
 
-            // Continue Button
+            // Continue
             ElevatedButton(
               onPressed: _onContinue,
               child: const Text('Continue'),
@@ -102,9 +99,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       lastDate: DateTime(2030),
     );
     if (picked != null) {
-      setState(() {
-        _selectedDate = picked;
-      });
+      setState(() => _selectedDate = picked);
     }
   }
 
@@ -114,9 +109,7 @@ class _CreateEventPageState extends State<CreateEventPage> {
       initialTime: TimeOfDay.now(),
     );
     if (picked != null) {
-      setState(() {
-        _selectedTime = picked;
-      });
+      setState(() => _selectedTime = picked);
     }
   }
 
@@ -126,7 +119,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
     final date = _selectedDate;
     final time = _selectedTime;
 
-    // Basic validation
     if (eventName.isEmpty || location.isEmpty || date == null || time == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill out all fields!')),
@@ -134,7 +126,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
       return;
     }
 
-    // Navigate to the Edit Price Information Page
     Navigator.push(
       context,
       MaterialPageRoute(

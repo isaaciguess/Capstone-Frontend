@@ -8,6 +8,9 @@ class EditBankInformationPage extends StatefulWidget {
   final double basePrice;
   final bool groupSignup;
   final bool isFree;
+  final bool concessionRate;
+  final bool groupDiscount;
+  final bool ageDiscount;
 
   const EditBankInformationPage({
     super.key,
@@ -18,6 +21,9 @@ class EditBankInformationPage extends StatefulWidget {
     required this.basePrice,
     required this.groupSignup,
     required this.isFree,
+    required this.concessionRate,
+    required this.groupDiscount,
+    required this.ageDiscount,
   });
 
   @override
@@ -72,7 +78,7 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
             ),
             const SizedBox(height: 24),
 
-            // Continue Button
+            // Continue
             ElevatedButton(
               onPressed: _onContinue,
               child: const Text('Continue'),
@@ -88,7 +94,6 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
     final accountNumber = _accountNumberController.text.trim();
     final bsb = _bsbController.text.trim();
 
-    // Basic validation
     if (accountName.isEmpty || accountNumber.isEmpty || bsb.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill out all bank fields!')),
@@ -96,7 +101,7 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
       return;
     }
 
-    // Show final summary (or navigate to a new summary page)
+    // Show final summary
     showDialog(
       context: context,
       builder: (context) {
@@ -112,6 +117,9 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
                 Text('Base Price: ${widget.basePrice}'),
                 Text('Group Signup: ${widget.groupSignup ? "Yes" : "No"}'),
                 Text('Is Free: ${widget.isFree}'),
+                Text('Concession Rate: ${widget.concessionRate}'),
+                Text('Group Discount: ${widget.groupDiscount}'),
+                Text('Age Discount: ${widget.ageDiscount}'),
                 const SizedBox(height: 16),
                 Text('Account Name: $accountName'),
                 Text('Account Number: $accountNumber'),
@@ -122,9 +130,8 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
           actions: [
             TextButton(
               onPressed: () {
-                // You could save all details to a database here,
-                // or navigate to a new page, etc.
-                Navigator.of(context).pop(); // closes the dialog
+                // Save data or navigate away, etc.
+                Navigator.of(context).pop();
               },
               child: const Text('OK'),
             ),
