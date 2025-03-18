@@ -1,6 +1,9 @@
+import 'package:first_app/questions_answer.dart';
 import 'package:flutter/material.dart';
+import 'create_registration_form_page.dart';
 
 class EditBankInformationPage extends StatefulWidget {
+  // Basic event info
   final String eventName;
   final String location;
   final DateTime date;
@@ -8,17 +11,29 @@ class EditBankInformationPage extends StatefulWidget {
   final double basePrice;
   final bool groupSignup;
   final bool isFree;
+
+  // Additional pricing toggles
   final bool concessionRate;
   final bool groupDiscount;
   final bool ageDiscount;
 
-  // Group discount details
+  // Concession data
+  final double? concessionDiscountRate;
+  final bool concessionRequiresID;
+
+  // Group data
   final double? discountPerMember;
   final int? memberLimit;
   final bool applyToOtherConcessions;
 
+  // Age data
+  final int? minAge;
+  final int? maxAge;
+  final double? ageDiscountRate;
+  final bool applyToAllPromotions;
+
   const EditBankInformationPage({
-    Key? key,
+    super.key,
     required this.eventName,
     required this.location,
     required this.date,
@@ -29,10 +44,16 @@ class EditBankInformationPage extends StatefulWidget {
     required this.concessionRate,
     required this.groupDiscount,
     required this.ageDiscount,
+    this.concessionDiscountRate,
+    this.concessionRequiresID = false,
     this.discountPerMember,
     this.memberLimit,
     this.applyToOtherConcessions = false,
-  }) : super(key: key);
+    this.minAge,
+    this.maxAge,
+    this.ageDiscountRate,
+    this.applyToAllPromotions = false,
+  });
 
   @override
   State<EditBankInformationPage> createState() =>
@@ -86,7 +107,7 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
             ),
             const SizedBox(height: 24),
 
-            // Continue
+            // Continue Button
             ElevatedButton(
               onPressed: _onContinue,
               child: const Text('Continue'),
@@ -102,6 +123,7 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
     final accountNumber = _accountNumberController.text.trim();
     final bsb = _bsbController.text.trim();
 
+    // Basic validation
     if (accountName.isEmpty || accountNumber.isEmpty || bsb.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill out all bank fields!')),
@@ -109,52 +131,35 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
       return;
     }
 
-    // Show final summary in a dialog (or navigate to a new SummaryPage)
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Event Summary'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: [
-                Text('Event Name: ${widget.eventName}'),
-                Text('Location: ${widget.location}'),
-                Text('Date: ${widget.date.toLocal()}'.split(' ')[0]),
-                Text('Time: ${widget.time.format(context)}'),
-                Text('Base Price: ${widget.basePrice}'),
-                Text('Group Signup: ${widget.groupSignup ? "Yes" : "No"}'),
-                Text('Is Free: ${widget.isFree}'),
-                Text('Concession Rate: ${widget.concessionRate}'),
-                Text('Group Discount: ${widget.groupDiscount}'),
-                Text('Age Discount: ${widget.ageDiscount}'),
-
-                // If group discount is chosen, show the details
-                if (widget.groupDiscount) ...[
-                  const SizedBox(height: 8),
-                  Text('Discount Per Member: ${widget.discountPerMember ?? 0}'),
-                  Text('Member Limit: ${widget.memberLimit ?? 0}'),
-                  Text('Apply to Other Concessions: ${widget.applyToOtherConcessions}'),
-                ],
-
-                const SizedBox(height: 16),
-                Text('Account Name: $accountName'),
-                Text('Account Number: $accountNumber'),
-                Text('BSB: $bsb'),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Save data or navigate away
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
+    // Navigate to the CreateRegistrationFormPage with all data
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CreateRegistrationFormPage(
+          eventName: widget.eventName,
+          location: widget.location,
+          date: widget.date,
+          time: widget.time,
+          basePrice: widget.basePrice,
+          groupSignup: widget.groupSignup,
+          isFree: widget.isFree,
+          concessionRate: widget.concessionRate,
+          groupDiscount: widget.groupDiscount,
+          ageDiscount: widget.ageDiscount,
+          concessionDiscountRate: widget.concessionDiscountRate,
+          concessionRequiresID: widget.concessionRequiresID,
+          discountPerMember: widget.discountPerMember,
+          memberLimit: widget.memberLimit,
+          applyToOtherConcessions: widget.applyToOtherConcessions,
+          minAge: widget.minAge,
+          maxAge: widget.maxAge,
+          ageDiscountRate: widget.ageDiscountRate,
+          applyToAllPromotions: widget.applyToAllPromotions,
+          accountName: accountName,
+          accountNumber: accountNumber,
+          bsb: bsb,
+        ),
+      ),
     );
   }
 }

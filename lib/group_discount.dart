@@ -6,11 +6,11 @@ class GroupDiscountPage extends StatefulWidget {
   final bool initialApplyToOtherConcessions;
 
   const GroupDiscountPage({
-    Key? key,
+    super.key,
     this.initialDiscountPerMember,
     this.initialMemberLimit,
     this.initialApplyToOtherConcessions = false,
-  }) : super(key: key);
+  });
 
   @override
   State<GroupDiscountPage> createState() => _GroupDiscountPageState();

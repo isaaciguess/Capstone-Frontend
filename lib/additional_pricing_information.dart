@@ -2,6 +2,8 @@ import 'package:first_app/group_discount.dart';
 import 'package:flutter/material.dart';
 import 'edit_bank_information_page.dart';
 import 'group_discount_page.dart';
+import 'concession_rate_page.dart';
+import 'age_discount_page.dart';
 
 class AdditionalPricingOptionsPage extends StatefulWidget {
   final String eventName;
@@ -13,7 +15,7 @@ class AdditionalPricingOptionsPage extends StatefulWidget {
   final bool isFree;
 
   const AdditionalPricingOptionsPage({
-    super.key,
+    Key? key,
     required this.eventName,
     required this.location,
     required this.date,
@@ -21,7 +23,7 @@ class AdditionalPricingOptionsPage extends StatefulWidget {
     required this.basePrice,
     required this.groupSignup,
     required this.isFree,
-  });
+  }) : super(key: key);
 
   @override
   State<AdditionalPricingOptionsPage> createState() =>
@@ -30,14 +32,25 @@ class AdditionalPricingOptionsPage extends StatefulWidget {
 
 class _AdditionalPricingOptionsPageState
     extends State<AdditionalPricingOptionsPage> {
+  // Toggles for the three discounts:
   bool _concessionRate = false;
   bool _groupDiscount = false;
   bool _ageDiscount = false;
 
-  // Store group discount details (entered on the GroupDiscountPage).
+  // Concession Rate data
+  double? _concessionDiscountRate;
+  bool _concessionRequiresID = false;
+
+  // Group Discount data
   double? _discountPerMember;
   int? _memberLimit;
   bool _applyToOtherConcessions = false;
+
+  // Age Discount data
+  int? _minAge;
+  int? _maxAge;
+  double? _ageDiscountRate;
+  bool _applyToAllPromotions = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +64,7 @@ class _AdditionalPricingOptionsPageState
           children: [
             // Concession Rate
             ElevatedButton(
-              onPressed: () {
-                setState(() => _concessionRate = !_concessionRate);
-              },
+              onPressed: _onConcessionRatePressed,
               style: ElevatedButton.styleFrom(
                 backgroundColor:
                     _concessionRate ? Colors.blue : Colors.grey.shade400,
@@ -75,9 +86,7 @@ class _AdditionalPricingOptionsPageState
 
             // Age Discount
             ElevatedButton(
-              onPressed: () {
-                setState(() => _ageDiscount = !_ageDiscount);
-              },
+              onPressed: _onAgeDiscountPressed,
               style: ElevatedButton.styleFrom(
                 backgroundColor: _ageDiscount ? Colors.blue : Colors.grey.shade400,
               ),
@@ -96,10 +105,32 @@ class _AdditionalPricingOptionsPageState
     );
   }
 
-  /// When "Group Discount" is pressed, navigate to the GroupDiscountPage.
-  /// After user fills out details and taps Continue, we pop back with data.
+  // ----------------------------
+  // Concession Rate
+  Future<void> _onConcessionRatePressed() async {
+    setState(() => _concessionRate = true);
+
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ConcessionRatePage(
+          initialDiscountRate: _concessionDiscountRate,
+          initialRequiresID: _concessionRequiresID,
+        ),
+      ),
+    );
+
+    if (result != null && result is Map<String, dynamic>) {
+      setState(() {
+        _concessionDiscountRate = result['discountRate'] as double;
+        _concessionRequiresID = result['requiresID'] as bool;
+      });
+    }
+  }
+
+  // ----------------------------
+  // Group Discount
   Future<void> _onGroupDiscountPressed() async {
-    // Mark groupDiscount as selected
     setState(() => _groupDiscount = true);
 
     final result = await Navigator.push(
@@ -115,7 +146,6 @@ class _AdditionalPricingOptionsPageState
 
     if (result != null && result is Map<String, dynamic>) {
       setState(() {
-        // Update local variables with data from GroupDiscountPage
         _discountPerMember = result['discountPerMember'] as double;
         _memberLimit = result['memberLimit'] as int;
         _applyToOtherConcessions = result['applyToOtherConcessions'] as bool;
@@ -123,8 +153,36 @@ class _AdditionalPricingOptionsPageState
     }
   }
 
+  // ----------------------------
+  // Age Discount
+  Future<void> _onAgeDiscountPressed() async {
+    setState(() => _ageDiscount = true);
+
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AgeDiscountPage(
+          initialMinAge: _minAge,
+          initialMaxAge: _maxAge,
+          initialDiscountRate: _ageDiscountRate,
+          initialApplyToAllPromotions: _applyToAllPromotions,
+        ),
+      ),
+    );
+
+    if (result != null && result is Map<String, dynamic>) {
+      setState(() {
+        _minAge = result['minAge'] as int;
+        _maxAge = result['maxAge'] as int;
+        _ageDiscountRate = result['discountRate'] as double;
+        _applyToAllPromotions = result['applyToAllPromotions'] as bool;
+      });
+    }
+  }
+
+  // ----------------------------
+  // Continue
   void _onContinue() {
-    // Navigate to the EditBankInformationPage, passing along all data.
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -136,14 +194,26 @@ class _AdditionalPricingOptionsPageState
           basePrice: widget.basePrice,
           groupSignup: widget.groupSignup,
           isFree: widget.isFree,
+
+          // Which discount toggles are selected
           concessionRate: _concessionRate,
           groupDiscount: _groupDiscount,
           ageDiscount: _ageDiscount,
 
-          // Pass the group discount details if user selected them
+          // Concession data
+          concessionDiscountRate: _concessionDiscountRate,
+          concessionRequiresID: _concessionRequiresID,
+
+          // Group data
           discountPerMember: _discountPerMember,
           memberLimit: _memberLimit,
           applyToOtherConcessions: _applyToOtherConcessions,
+
+          // Age data
+          minAge: _minAge,
+          maxAge: _maxAge,
+          ageDiscountRate: _ageDiscountRate,
+          applyToAllPromotions: _applyToAllPromotions,
         ),
       ),
     );
