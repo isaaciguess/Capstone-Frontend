@@ -12,8 +12,13 @@ class EditBankInformationPage extends StatefulWidget {
   final bool groupDiscount;
   final bool ageDiscount;
 
+  // Group discount details
+  final double? discountPerMember;
+  final int? memberLimit;
+  final bool applyToOtherConcessions;
+
   const EditBankInformationPage({
-    super.key,
+    Key? key,
     required this.eventName,
     required this.location,
     required this.date,
@@ -24,7 +29,10 @@ class EditBankInformationPage extends StatefulWidget {
     required this.concessionRate,
     required this.groupDiscount,
     required this.ageDiscount,
-  });
+    this.discountPerMember,
+    this.memberLimit,
+    this.applyToOtherConcessions = false,
+  }) : super(key: key);
 
   @override
   State<EditBankInformationPage> createState() =>
@@ -101,7 +109,7 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
       return;
     }
 
-    // Show final summary
+    // Show final summary in a dialog (or navigate to a new SummaryPage)
     showDialog(
       context: context,
       builder: (context) {
@@ -120,6 +128,15 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
                 Text('Concession Rate: ${widget.concessionRate}'),
                 Text('Group Discount: ${widget.groupDiscount}'),
                 Text('Age Discount: ${widget.ageDiscount}'),
+
+                // If group discount is chosen, show the details
+                if (widget.groupDiscount) ...[
+                  const SizedBox(height: 8),
+                  Text('Discount Per Member: ${widget.discountPerMember ?? 0}'),
+                  Text('Member Limit: ${widget.memberLimit ?? 0}'),
+                  Text('Apply to Other Concessions: ${widget.applyToOtherConcessions}'),
+                ],
+
                 const SizedBox(height: 16),
                 Text('Account Name: $accountName'),
                 Text('Account Number: $accountNumber'),
@@ -130,7 +147,7 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
           actions: [
             TextButton(
               onPressed: () {
-                // Save data or navigate away, etc.
+                // Save data or navigate away
                 Navigator.of(context).pop();
               },
               child: const Text('OK'),

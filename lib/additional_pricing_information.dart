@@ -1,5 +1,7 @@
+import 'package:first_app/group_discount.dart';
 import 'package:flutter/material.dart';
 import 'edit_bank_information_page.dart';
+import 'group_discount_page.dart';
 
 class AdditionalPricingOptionsPage extends StatefulWidget {
   final String eventName;
@@ -32,6 +34,11 @@ class _AdditionalPricingOptionsPageState
   bool _groupDiscount = false;
   bool _ageDiscount = false;
 
+  // Store group discount details (entered on the GroupDiscountPage).
+  double? _discountPerMember;
+  int? _memberLimit;
+  bool _applyToOtherConcessions = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,9 +64,7 @@ class _AdditionalPricingOptionsPageState
 
             // Group Discount
             ElevatedButton(
-              onPressed: () {
-                setState(() => _groupDiscount = !_groupDiscount);
-              },
+              onPressed: _onGroupDiscountPressed,
               style: ElevatedButton.styleFrom(
                 backgroundColor:
                     _groupDiscount ? Colors.blue : Colors.grey.shade400,
@@ -74,8 +79,7 @@ class _AdditionalPricingOptionsPageState
                 setState(() => _ageDiscount = !_ageDiscount);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    _ageDiscount ? Colors.blue : Colors.grey.shade400,
+                backgroundColor: _ageDiscount ? Colors.blue : Colors.grey.shade400,
               ),
               child: const Text('Age Discount'),
             ),
@@ -92,8 +96,35 @@ class _AdditionalPricingOptionsPageState
     );
   }
 
+  /// When "Group Discount" is pressed, navigate to the GroupDiscountPage.
+  /// After user fills out details and taps Continue, we pop back with data.
+  Future<void> _onGroupDiscountPressed() async {
+    // Mark groupDiscount as selected
+    setState(() => _groupDiscount = true);
+
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GroupDiscountPage(
+          initialDiscountPerMember: _discountPerMember,
+          initialMemberLimit: _memberLimit,
+          initialApplyToOtherConcessions: _applyToOtherConcessions,
+        ),
+      ),
+    );
+
+    if (result != null && result is Map<String, dynamic>) {
+      setState(() {
+        // Update local variables with data from GroupDiscountPage
+        _discountPerMember = result['discountPerMember'] as double;
+        _memberLimit = result['memberLimit'] as int;
+        _applyToOtherConcessions = result['applyToOtherConcessions'] as bool;
+      });
+    }
+  }
+
   void _onContinue() {
-    // Navigate to the EditBankInformationPage
+    // Navigate to the EditBankInformationPage, passing along all data.
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -108,6 +139,11 @@ class _AdditionalPricingOptionsPageState
           concessionRate: _concessionRate,
           groupDiscount: _groupDiscount,
           ageDiscount: _ageDiscount,
+
+          // Pass the group discount details if user selected them
+          discountPerMember: _discountPerMember,
+          memberLimit: _memberLimit,
+          applyToOtherConcessions: _applyToOtherConcessions,
         ),
       ),
     );
