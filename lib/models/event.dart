@@ -53,7 +53,6 @@ class EventDetails {
       required this.registrationsCount});
 
   factory EventDetails.fromJson(Map<String, dynamic> json) {
-    json["id"] is int ? print("ID is int") : print("ID is String");
     return EventDetails(
         id: json["id"],
         organiserId: json["organiserId"],
@@ -107,15 +106,15 @@ class EventWithQuestions {
   final String description;
   final String location;
   final int capacity;
-  final Enum eventType;
+  final String eventType;
   final DateTime startDateTime;
   final DateTime endDateTime;
-  final Enum status;
+  final String status;
   final DateTime createdAt;
   final DateTime updatedAt;
   final OrganizerName organizer;
   final List<Ticket> tickets;
-  final Map<String, int> registrationsCount;
+  final int registrationsCount;
 
   EventWithQuestions(
       {required this.id,
@@ -154,7 +153,7 @@ class EventWithQuestions {
         tickets: json["tickets"]
             .map<Ticket>((ticket) => Ticket.fromJson(ticket))
             .toList(),
-        registrationsCount: json["registrationsCount"]);
+        registrationsCount: json["_count"]["registrations"],);
   }
 }
 

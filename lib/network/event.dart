@@ -21,11 +21,12 @@ Future<void> getAllEvents() async {
 }
 
 Future<void> getEventById(int id) async {
-  try {
-    final response = await dioClient.dio.get("/events/1");
+   try {
+     final response = await dioClient.dio.get("/events/1");
     if (response.statusCode == 200) {
+     
       final responseData = response.data;
-      print("Event: $responseData");
+      EventWithQuestions event = EventWithQuestions.fromJson(responseData["data"]);
     } else {
       print("Failed to get event ${response.data}");
     }
