@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:first_app/network/auth.dart';
 import 'package:flutter/material.dart';// Needed to initialize Flutter bindings
-import 'package:first_app/models/user.dart';
+import 'package:first_app/models/user_register.dart';
 
 void main() {
   // Ensure Flutter is initialized before running tests
@@ -12,13 +12,13 @@ void main() {
     expect(true, true); // Placeholder
   });
 
-  test('Referesh Token Test', () async {
+  test('Refresh Token Test', () async {
     await refreshToken();
     expect(true, true);
   });
 
   test('register event test', () async {
-    User user = new User
+    User user = User
     (
       email:"test125@gmail.com",
       password: "Isaac123",

@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:ffi';
 import "package:first_app/network/dio_client.dart";
 import "package:flutter_secure_storage/flutter_secure_storage.dart";
-import "package:first_app/models/user.dart";
+import "package:first_app/models/user_register.dart";
 
-
+// TO DO NOT USE PRINTS FOR ERROR HANDLING
 String? accessToken;
 
 //Implemented
@@ -17,12 +17,8 @@ Future<void> loginUser(String email, String password) async {
     if (response.statusCode == 200)
     {
       final Map<String, dynamic> responseData = response.data;
-
-      final String accessToken = responseData["data"]?["accessToken"];
-
-      //await storage.write(key: "accessToken", value: accessToken); TO DO IMPLEMENT SECURE STORAGE
-  
-      handleAccessToken(accessToken);
+      final String newAccessToken = responseData["data"]?["accessToken"];
+      handleAccessToken(newAccessToken);
     }
     else
     {
@@ -34,11 +30,11 @@ Future<void> loginUser(String email, String password) async {
   }
 }
 
-void handleAccessToken(String? accessToken) async
+void handleAccessToken(String? newAccessToken) async
 {
-  if (accessToken != null) {
-    //await storage.write(key: "accessToken", value: accessToken); TO DO IMPLEMENT SECURE STORAGE
-    accessToken = accessToken;
+  if (newAccessToken != null) {
+    accessToken == newAccessToken ? print("Access Token the same.") : print("Error Access Token different.");
+    accessToken = newAccessToken;
     print("Login successful! Access Token stored.");
   } 
   else
@@ -48,12 +44,23 @@ void handleAccessToken(String? accessToken) async
 }
 
 Future<void> refreshToken() async{
-  try
-  {
+  try {
+    //await checkCookies();
     final response = await dioClient.dio.post("/auth/refresh-token");
-    response.statusCode == 200 ? print("Token refresh successful") : print("Token refresh failed: ${response.data}");
-  } catch (error){
-    print("Error refreshing token: $error");
+
+    if (response.statusCode == 200)
+    {
+      final Map<String, dynamic> responseData = response.data;
+      final String newAccessToken = responseData["data"]?["accessToken"];
+      handleAccessToken(newAccessToken);
+    }
+    else
+    {
+      print("Refresh token failed: ${response.data}");
+    }
+  }
+  catch (error) {
+    print("Refresh token error: $error");
   }
 }
 
@@ -63,7 +70,7 @@ Future<void> registerUser(User data) async{
   try {
     final response = await dioClient.dio.post("/auth/register", data: data.toJson());
     if (response.statusCode == 200) {
-      print("User registered successfully!");
+      print("User registered successfully $response");
     } else {
       print("User registration failed");
     }
