@@ -82,12 +82,12 @@ class CreateQuestionDTO{
     required this.displayOrder
   });
 
-  factory CreateQuestionDTO.toJson(CreateQuestionDTO question) {
-    return CreateQuestionDTO(
-      questionText: question.questionText,
-      isRequired: question.isRequired,
-      displayOrder: question.displayOrder
-    );
+  Map<String, dynamic> toJson(){
+    return {
+      "questionText": questionText,
+      "isRequired": isRequired,
+      "displayOrder": displayOrder
+    };
   }
 }
 

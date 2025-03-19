@@ -44,3 +44,32 @@ factory Ticket.fromJson(Map<String, dynamic> json){
   );
 }
 }
+
+class TicketDTO{
+  final String name;
+  final String description;
+  final double price;
+  final int quantityTotal;
+  final DateTime salesStart;
+  final DateTime salesEnd;
+
+  TicketDTO({
+    required this.name,
+    required this.description,
+    required this.price,
+    required this.quantityTotal,
+    required this.salesStart,
+    required this.salesEnd
+  });
+
+  Map<String, dynamic> toJson(){
+    return {
+      "name": name,
+      "description": description,
+      "price": price,
+      "quantityTotal": quantityTotal,
+      "salesStart": salesStart.toIso8601String(),
+      "salesEnd": salesEnd.toIso8601String()
+    };
+  }
+}

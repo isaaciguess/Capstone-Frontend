@@ -1,3 +1,4 @@
+import 'package:first_app/models/question.dart';
 import 'package:first_app/models/ticket.dart';
 import 'package:first_app/models/organizer.dart';
 //For Get all Events
@@ -163,7 +164,41 @@ class EventWithQuestions{
 }
 
 // For Create new Event
-CreateEventDTO{
+class CreateEventDTO{
+  final String name; 
+  final String description;
+  final String location;
+  final Enum eventType;
+  final DateTime startDateTime;
+  final DateTime endDateTime;
+  final int capacity;
+  final List<TicketDTO> tickets;
+  final List<CreateQuestionDTO> questions;
 
+  CreateEventDTO({
+    required this.name,
+    required this.description,
+    required this.location,
+    required this.eventType,
+    required this.startDateTime,
+    required this.endDateTime,
+    required this.capacity,
+    required this.tickets,
+    required this.questions
+  });
+
+  Map<String, dynamic> toJson(){
+    return {
+      "name": name,
+      "description": description,
+      "location": location,
+      "eventType": eventType,
+      "startDateTime": startDateTime.toIso8601String(),
+      "endDateTime": endDateTime.toIso8601String(),
+      "capacity": capacity,
+      "tickets": tickets.map((ticket) => ticket.toJson()).toList(),
+      "questions": questions.map((question) => question.toJson()).toList()
+    };
+  }
 }
 
