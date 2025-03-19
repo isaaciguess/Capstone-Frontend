@@ -20,16 +20,14 @@ class DioClient {
           connectTimeout: Duration(seconds: 10),
           receiveTimeout: Duration(seconds: 10),
           headers: {
-          "Cache-Control": "no-cache",  // Prevents caching of responses
-          "Pragma": "no-cache",
-          "Authorization" : accessToken
+            "Cache-Control": "no-cache", // Prevents caching of responses
+            "Pragma": "no-cache",
+            "Authorization": accessToken
           },
         )) {
     dio.interceptors.add(CookieManager(cookieJar));
     dio.options.extra["withCredentials"] = true;
-
   }
-
 }
 
 final dioClient = DioClient();

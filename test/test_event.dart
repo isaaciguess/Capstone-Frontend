@@ -15,6 +15,4 @@ void main() {
     await getEventById(1);
     expect(true, true);
   });
-
-  test()
 }
