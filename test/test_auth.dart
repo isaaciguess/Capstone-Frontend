@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:first_app/network/auth.dart';
 import 'package:flutter/material.dart';// Needed to initialize Flutter bindings
-import 'package:first_app/models/user_register.dart';
+import 'package:first_app/models/user.dart';
 
 void main() {
   // Ensure Flutter is initialized before running tests
@@ -18,7 +18,7 @@ void main() {
   });
 
   test('register event test', () async {
-    User user = User
+    RegisterUserDTO user = RegisterUserDTO
     (
       email:"test125@gmail.com",
       password: "Isaac123",

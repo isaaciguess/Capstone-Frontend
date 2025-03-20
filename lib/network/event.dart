@@ -27,10 +27,40 @@ Future<void> createEvent(CreateEventDTO event) async {
   }
 }
 
-Future<void> updateEvent(int id, Struct updatedEvent) async {
-  
+Future<void> updateEvent(int id, UpdateEventDTO updatedEvent) async {
+  try {
+    final response = await dioClient.dio.put(
+      "/events/$id",
+      data: updatedEvent,
+          options: Options(
+      headers: {
+        'Authorization': 'Bearer $accessToken',}));
+    if (response.data["statis"] == "success") {
+      print("Event updated successfully: ${response.data}");
+    } else {
+      print("Failed to update event: ${response.data}");
+    }
+  } catch (error) {
+    print("Error updating event: $error");
+  }     
 }
-Future<void> deleteEvent(int id) async {}
+
+Future<void> deleteEvent(int id) async {
+  try {
+    final response = await dioClient.dio.delete(
+      "/events/$id",
+          options: Options(
+      headers:
+        {'Authorization': 'Bearer $accessToken',}));
+    if (response.data["status"] == "success") {
+      print("Event deleted successfully: ${response.data}");
+    } else {
+      print("Failed to delete event: ${response.data}");
+    }
+  } catch (error) {
+    print("Error deleting event: $error");
+  }
+}
 
 //Implemented
 Future<Events?> getAllEvents() async {

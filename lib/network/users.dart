@@ -2,7 +2,10 @@ import 'dart:ffi';
 
 
 // To do 
-Future<void> getUserProfile(String id) async {}
+Future<void> getUserProfile(String id) async {
+
+}
+
 Future<void> updateUserProfile(String id, Struct newProfile) async {}
 Future<void> changePassword(String id, Struct passwordUpdate) async {}
 

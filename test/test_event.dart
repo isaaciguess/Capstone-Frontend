@@ -9,7 +9,11 @@ import 'dart:convert';
 
 void main() {
   // Ensure Flutter is initialized before running tests
+
+
   WidgetsFlutterBinding.ensureInitialized(); 
+
+  
   test('Test Get all events', () async {
     await getAllEvents();
     expect(true, true);
@@ -20,7 +24,7 @@ void main() {
     expect(true, true);
   });
 
-  test('Test create event', () async {
+/*   test('Test create event', () async {
     List<TicketDTO> tickets = [
       TicketDTO(name: "test1", description: "test description 1", price: 25.00, 
                 quantityTotal: 80, salesStart: DateTime.parse("2025-05-15T00:00:00.000Z"), 
@@ -50,9 +54,26 @@ void main() {
 
     final prettyJson = JsonEncoder.withIndent('  ').convert(event.toJson());
     print(prettyJson);
-    await loginUser("isaac4@gmail.com", "Isaac123");
+  
 
     await createEvent(event); 
+    expect(true, true);
+  }); */
+
+  test('Test update event', () async {
+    await loginUser("isaac1@gmail.com", "Isaac123");
+
+    UpdateEventDTO event = UpdateEventDTO(
+      name: "Updated Event",
+      description: "Updated Event for Testing",
+      location: "Melbourne",
+      capacity: 100,
+      eventType: "SPORTS",
+      startDateTime: DateTime.parse("2025-08-15T09:00:00.000Z"),
+      endDateTime: DateTime.parse("2025-09-15T09:00:00.000Z"),
+    );
+
+    await updateEvent(1, event); 
     expect(true, true);
   });
 

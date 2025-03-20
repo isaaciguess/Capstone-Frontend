@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:ffi';
 import "package:first_app/network/dio_client.dart";
 import "package:flutter_secure_storage/flutter_secure_storage.dart";
-import "package:first_app/models/user_register.dart";
+import "package:first_app/models/user.dart";
 
 // TO DO NOT USE PRINTS FOR ERROR HANDLING
 // TO DO SECURE STORAGE FOR ACCESS TOKEN
@@ -44,7 +44,7 @@ Future<void> refreshToken() async {
     //await checkCookies();
     final response = await dioClient.dio.post("/auth/refresh-token");
 
-    if (response.statusCode == 200) {
+    if (response.data["status"] == "success") {
       final Map<String, dynamic> responseData = response.data;
       final String newAccessToken = responseData["data"]?["accessToken"];
       handleAccessToken(newAccessToken);
@@ -57,7 +57,7 @@ Future<void> refreshToken() async {
 }
 
 // TO DO ADD PROPER SUCESSFUL RESPONSE HANDLING
-Future<void> registerUser(User data) async {
+Future<void> registerUser(RegisterUserDTO data) async {
   try {
     final response =
         await dioClient.dio.post("/auth/register", data: data.toJson());

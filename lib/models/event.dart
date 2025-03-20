@@ -194,3 +194,39 @@ class CreateEventDTO {
     };
   }
 }
+
+class UpdateEventDTO {
+  final String name;
+  final String description;
+  final String location;
+  final int capacity;
+  final String eventType;
+  final DateTime startDateTime;
+  final DateTime endDateTime;
+
+
+  UpdateEventDTO(
+      {required this.name,
+      required this.description,
+      required this.location,
+      required this.capacity,
+      required this.eventType,
+      required this.startDateTime,
+      required this.endDateTime,
+      });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "name": name,
+      "description": description,
+      "location": location,
+      "capacity": capacity,
+      "eventType": eventType,
+      "startDateTime": startDateTime.toIso8601String(),
+      "endDateTime": endDateTime.toIso8601String(),
+    };
+  }
+}
+
+
+// For Update Event
