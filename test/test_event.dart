@@ -20,7 +20,7 @@ void main() {
   });
 
   test('Test get Event by id', () async {
-    await getEventById(1);
+    await getEventById(2);
     expect(true, true);
   });
 
@@ -61,8 +61,6 @@ void main() {
   }); */
 
   test('Test update event', () async {
-    await loginUser("isaac1@gmail.com", "Isaac123");
-
     UpdateEventDTO event = UpdateEventDTO(
       name: "Updated Event",
       description: "Updated Event for Testing",
@@ -73,9 +71,16 @@ void main() {
       endDateTime: DateTime.parse("2025-09-15T09:00:00.000Z"),
     );
 
-    await updateEvent(1, event); 
+    await updateEvent(2, event); 
     expect(true, true);
   });
 
+  //NOT WORKING IN BACKEND YET
+/*   test('Test delete event', () async {
+    await loginUser("isaac1@gmail.com", "Isaac123");
+    await deleteEvent(1); 
+    expect(true, true);
+  }); 
+ */
   
 }

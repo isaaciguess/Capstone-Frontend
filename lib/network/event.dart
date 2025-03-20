@@ -17,7 +17,7 @@ Future<void> createEvent(CreateEventDTO event) async {
         'Authorization': 'Bearer $accessToken',
       },
     ));
-    if (response.statusCode == 200) {
+    if (response.data["success"]) {
       print("Event created successfully: ${response.data}");
     } else {
       print("Failed to create event: ${response.data}");
@@ -31,11 +31,11 @@ Future<void> updateEvent(int id, UpdateEventDTO updatedEvent) async {
   try {
     final response = await dioClient.dio.put(
       "/events/$id",
-      data: updatedEvent,
+      data: updatedEvent.toJson(),
           options: Options(
       headers: {
         'Authorization': 'Bearer $accessToken',}));
-    if (response.data["statis"] == "success") {
+    if (response.data["success"]) {
       print("Event updated successfully: ${response.data}");
     } else {
       print("Failed to update event: ${response.data}");
@@ -45,6 +45,7 @@ Future<void> updateEvent(int id, UpdateEventDTO updatedEvent) async {
   }     
 }
 
+// NOT WORKING IN BACKEND YET
 Future<void> deleteEvent(int id) async {
   try {
     final response = await dioClient.dio.delete(
@@ -52,7 +53,7 @@ Future<void> deleteEvent(int id) async {
           options: Options(
       headers:
         {'Authorization': 'Bearer $accessToken',}));
-    if (response.data["status"] == "success") {
+    if (response.data["success"]) {
       print("Event deleted successfully: ${response.data}");
     } else {
       print("Failed to delete event: ${response.data}");
@@ -66,7 +67,7 @@ Future<void> deleteEvent(int id) async {
 Future<Events?> getAllEvents() async {
   try{
     final response = await dioClient.dio.get("/events");
-    if(response.statusCode == 200){
+    if(response.data["success"]){
       final  responseData = response.data;
       Events events = Events.fromJson(responseData["data"]);
       return events;
@@ -84,10 +85,8 @@ Future<Events?> getAllEvents() async {
 Future<EventWithQuestions?> getEventById(int id) async {
    try { 
 
-    final response = await dioClient.dio.get("/events/1");
-
-    if (response.statusCode == 200) {
-     
+    final response = await dioClient.dio.get("/events/$id");
+    if (response.data["success"]) {
       final responseData = response.data;
       EventWithQuestions event = EventWithQuestions.fromJson(responseData["data"]);
     } else {
