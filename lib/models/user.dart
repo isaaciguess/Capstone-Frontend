@@ -47,7 +47,6 @@ class UpdateUserProfileDTO{
 }
 
 class Users{
-
 }
 class User{
   final int id;
