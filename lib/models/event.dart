@@ -162,7 +162,7 @@ class CreateEventDTO {
   final String name;
   final String description;
   final String location;
-  final Enum eventType;
+  final String eventType;
   final DateTime startDateTime;
   final DateTime endDateTime;
   final int capacity;

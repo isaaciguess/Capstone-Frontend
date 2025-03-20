@@ -15,7 +15,6 @@ Future<void> loginUser(String email, String password) async {
       "/auth/login",
       data: {"email": "isaac1@gmail.com", "password": "Isaac123"},
     );
-
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = response.data;
       final String newAccessToken = responseData["data"]?["accessToken"];
@@ -32,7 +31,7 @@ void handleAccessToken(String? newAccessToken) async {
   if (newAccessToken != null) {
     accessToken == newAccessToken
         ? print("Access Token the same.")
-        : print("Error Access Token different.");
+        : print("Access Token different.");
     accessToken = newAccessToken;
     print("Login successful! Access Token stored.");
   } else {
