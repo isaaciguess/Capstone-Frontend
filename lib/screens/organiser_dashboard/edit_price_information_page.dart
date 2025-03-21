@@ -1,4 +1,4 @@
-import 'package:first_app/additional_pricing_information.dart';
+import 'additional_pricing_information.dart';
 import 'package:flutter/material.dart';
 
 class EditPriceInformationPage extends StatefulWidget {

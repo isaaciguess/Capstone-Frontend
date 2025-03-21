@@ -1,4 +1,4 @@
-import 'package:first_app/group_discount.dart';
+import 'group_discount.dart';
 import 'package:flutter/material.dart';
 import 'edit_bank_information_page.dart';
 import 'group_discount_page.dart';
