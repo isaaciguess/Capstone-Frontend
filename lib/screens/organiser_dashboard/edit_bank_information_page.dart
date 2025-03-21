@@ -1,4 +1,4 @@
-import 'package:first_app/questions_answer.dart';
+import 'questions_answer.dart';
 import 'package:flutter/material.dart';
 import 'create_registration_form_page.dart';
 

@@ -1,4 +1,4 @@
-import 'package:first_app/create_event_page..dart';
+import 'screens/organiser_dashboard/create_event_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {

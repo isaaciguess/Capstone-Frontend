@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:first_app/screens/explore.dart';
-import 'package:first_app/screens/organiser_dashboard.dart';
+import 'package:first_app/screens/organiser_dashboard/create_event_page.dart';
 import 'package:first_app/screens/login.dart';
 
 class MainScreen extends StatefulWidget {
@@ -16,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
   // List of screens that correspond to the bottom navigation items.
   final List<Widget> _screens = const [
     Explore(),
-    OrganiserDasboard(),
+    CreateEventPage(),
     LoginScreen(),
   ];
 
