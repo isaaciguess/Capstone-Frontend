@@ -15,7 +15,7 @@ class DioClient {
 
   DioClient._internal()
       : dio = Dio(BaseOptions(
-          baseUrl: "http://localhost:3000/api",
+          baseUrl: "http://10.0.2.2:3000/api",
           contentType: "application/json",
           connectTimeout: Duration(seconds: 10),
           receiveTimeout: Duration(seconds: 10),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'navigation_bar.dart'; // Import the file with the nav bar code
+import 'main_screen.dart';
 
-void main() => runApp(const MyApp());
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -9,9 +11,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Regi Master',
-      theme: ThemeData(primarySwatch: Colors.purple),
-      home: const HomeScreen(), // Use the HomeScreen widget defined in bottom_nav_bar.dart
+      title: 'Bottom Navigation Bar Example',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MainScreen(),
     );
   }
 }
