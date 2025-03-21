@@ -4,15 +4,14 @@ class RegisterUserDTO {
   final String email;
   final String password;
   final String? phoneNo;
-  final String role;
 
   RegisterUserDTO(
       {required this.firstName,
       required this.lastName,
       required this.email,
       required this.password,
-      this.phoneNo,
-      this.role = "PARTICIPANT"});
+      this.phoneNo
+      });
 
   Map<String, dynamic> toJson() {
     return {
@@ -20,7 +19,7 @@ class RegisterUserDTO {
       "password": password,
       "firstName": firstName,
       "lastName": lastName,
-      if (phoneNo == null) "phoneNo": "" else "phoneNo": phoneNo
+      if (phoneNo == null) "phoneNo": "123456789" else "phoneNo": phoneNo
     };
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:first_app/network/auth.dart';
+import 'package:first_app/models/user.dart'; // For SystemChrome.setPreferredOrientations
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -16,7 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   // Registration function (add your own registration logic here)
-  void _register() {
+  Future<void> _register() async {
     final String firstName = _firstNameController.text.trim();
     final String lastName = _lastNameController.text.trim();
     final String email = _emailController.text.trim();
@@ -30,6 +32,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
     
+    await registerUser(
+      RegisterUserDTO(
+        email: email,
+        password: password,
+        lastName: lastName,
+        firstName: firstName,
+      ),
+    );
+
     // Proceed with your registration logic
     debugPrint('Registering: $firstName $lastName, Email: $email');
     // You can also navigate to another screen or display a success message here.
