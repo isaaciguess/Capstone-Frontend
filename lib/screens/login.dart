@@ -19,6 +19,10 @@ class _LoginScreenState extends State<LoginScreen> {
     String email = _emailController.text;
     String password = _passwordController.text;
     await loginUser(email, password);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text('Login Successful')),
+  );
     debugPrint('Attempting login with email: $email and password: $password');
   }
 

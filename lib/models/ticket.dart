@@ -43,6 +43,25 @@ class Ticket {
   }
 }
 
+class TicketInformation{
+  final String? name;
+  final String? description;
+  final String? price;
+  final int? quantityTotal;
+  final DateTime? salesStart;
+  final DateTime? salesEnd;
+
+  TicketInformation(
+      {this.name,
+      this.description,
+      this.price,
+      this.quantityTotal,
+      this.salesStart,
+      this.salesEnd});
+
+  
+}
+
 class TicketDTO {
   final String name;
   final String description;

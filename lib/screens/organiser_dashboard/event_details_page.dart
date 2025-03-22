@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
-import '../models/participant.dart';
-import '../data/participant_data.dart';
-import '../services/report_service.dart';
-import '../widgets/event_info_item.dart';
-import '../widgets/action_button.dart';
+import '../../models/participant.dart';
+import '../../data/participant_data.dart';
+import '../../services/report_service.dart';
+import '../../widgets/event_info_item.dart';
+import '../../widgets/action_button.dart';
 
 class EventDetailsPage extends StatelessWidget {
   const EventDetailsPage({Key? key}) : super(key: key);

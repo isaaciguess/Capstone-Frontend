@@ -1,58 +1,29 @@
-import 'questions_answer.dart';
+import 'ce_4_create_questions_page.dart';
 import 'package:flutter/material.dart';
 import 'create_registration_form_page.dart';
+import 'package:first_app/models/ticket.dart';
 
 class EditBankInformationPage extends StatefulWidget {
-  // Basic event info
   final String eventName;
   final String location;
-  final DateTime date;
-  final TimeOfDay time;
-  final double basePrice;
-  final bool groupSignup;
-  final bool isFree;
+  final String description;
+  final String type;
+  final int capacity;
+  final DateTime startDateTime;
+  final DateTime endDateTime;
+  final List<TicketDTO> tickets;
 
-  // Additional pricing toggles
-  final bool concessionRate;
-  final bool groupDiscount;
-  final bool ageDiscount;
-
-  // Concession data
-  final double? concessionDiscountRate;
-  final bool concessionRequiresID;
-
-  // Group data
-  final double? discountPerMember;
-  final int? memberLimit;
-  final bool applyToOtherConcessions;
-
-  // Age data
-  final int? minAge;
-  final int? maxAge;
-  final double? ageDiscountRate;
-  final bool applyToAllPromotions;
 
   const EditBankInformationPage({
     super.key,
     required this.eventName,
     required this.location,
-    required this.date,
-    required this.time,
-    required this.basePrice,
-    required this.groupSignup,
-    required this.isFree,
-    required this.concessionRate,
-    required this.groupDiscount,
-    required this.ageDiscount,
-    this.concessionDiscountRate,
-    this.concessionRequiresID = false,
-    this.discountPerMember,
-    this.memberLimit,
-    this.applyToOtherConcessions = false,
-    this.minAge,
-    this.maxAge,
-    this.ageDiscountRate,
-    this.applyToAllPromotions = false,
+    required this.description,
+    required this.type,
+    required this.capacity,
+    required this.startDateTime,
+    required this.endDateTime,
+    required this.tickets,  
   });
 
   @override
@@ -135,26 +106,15 @@ class _EditBankInformationPageState extends State<EditBankInformationPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CreateRegistrationFormPage(
+        builder: (context) => CreateEventQuestions(
           eventName: widget.eventName,
           location: widget.location,
-          date: widget.date,
-          time: widget.time,
-          basePrice: widget.basePrice,
-          groupSignup: widget.groupSignup,
-          isFree: widget.isFree,
-          concessionRate: widget.concessionRate,
-          groupDiscount: widget.groupDiscount,
-          ageDiscount: widget.ageDiscount,
-          concessionDiscountRate: widget.concessionDiscountRate,
-          concessionRequiresID: widget.concessionRequiresID,
-          discountPerMember: widget.discountPerMember,
-          memberLimit: widget.memberLimit,
-          applyToOtherConcessions: widget.applyToOtherConcessions,
-          minAge: widget.minAge,
-          maxAge: widget.maxAge,
-          ageDiscountRate: widget.ageDiscountRate,
-          applyToAllPromotions: widget.applyToAllPromotions,
+          description: widget.description,
+          type: widget.type,
+          capacity: widget.capacity,
+          startDateTime: widget.startDateTime,
+          endDateTime: widget.endDateTime,
+          tickets: widget.tickets,
           accountName: accountName,
           accountNumber: accountNumber,
           bsb: bsb,

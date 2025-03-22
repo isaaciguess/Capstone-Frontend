@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/event_details_page.dart';
+import 'screens/organiser_dashboard/event_details_page.dart';
 
 class BasicReportGenerator extends StatelessWidget {
   const BasicReportGenerator({Key? key}) : super(key: key);
