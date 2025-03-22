@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:first_app/screens/new_registration_form_generator.dart';
 
 class Explore extends StatelessWidget {
   const Explore({super.key});
   
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Explore', style: TextStyle(fontSize: 24)),
-    );
+    return RegistrationForm(eventId: 2);
   }
 }

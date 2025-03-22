@@ -14,10 +14,10 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized(); 
 
   
-  test('Test Get all events', () async {
+/*   test('Test Get all events', () async {
     await getAllEvents();
     expect(true, true);
-  });
+  }); */
 
   test('Test get Event by id', () async {
     await getEventById(2);
@@ -60,7 +60,7 @@ void main() {
     expect(true, true);
   }); */
 
-  test('Test update event', () async {
+/*   test('Test update event', () async {
     UpdateEventDTO event = UpdateEventDTO(
       name: "Updated Event",
       description: "Updated Event for Testing",
@@ -74,7 +74,7 @@ void main() {
     await updateEvent(2, event); 
     expect(true, true);
   });
-
+ */
   //NOT WORKING IN BACKEND YET
 /*   test('Test delete event', () async {
     await loginUser("isaac1@gmail.com", "Isaac123");

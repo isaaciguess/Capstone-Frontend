@@ -1,7 +1,9 @@
+import 'package:first_app/models/event.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/models/question.dart';
 import 'package:first_app/widgets/create_question.dart';
 import 'package:first_app/models/ticket.dart';
+import 'package:first_app/network/event.dart';
 
 class CreateEventQuestions extends StatefulWidget {
 
@@ -55,14 +57,26 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
   }
 
   // Continue button action: check that at least one question is added and navigate.
-  void _continue() {
+  Future<void> _continue() async {
     if (questions.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please add at least one question.')),
       );
+
       return;
     }
-
+    CreateEventDTO event = CreateEventDTO(
+      name: widget.eventName,
+      description: widget.description,
+      location: widget.location,
+      eventType: widget.type,
+      startDateTime: widget.startDateTime,
+      endDateTime: widget.endDateTime,
+      capacity: widget.capacity,
+      tickets: widget.tickets,
+      questions: questions,
+    );
+    await createEvent(event);
   }
 
   @override
@@ -101,7 +115,7 @@ class _CreateEventQuestionsScreenState extends State<CreateEventQuestions> {
             // Continue button.
             ElevatedButton(
               onPressed: _continue,
-              child: const Text('Continue'),
+              child: const Text('Create Event'),
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:first_app/models/question.dart';
 import 'package:first_app/models/ticket.dart';
 import 'package:first_app/models/organizer.dart';
+import 'package:first_app/models/question.dart';
 
 //For Get all Events
 class Events {
@@ -114,6 +115,7 @@ class EventWithQuestions {
   final DateTime updatedAt;
   final OrganizerName organizer;
   final List<Ticket> tickets;
+  final List<Question> questions;
   final int registrationsCount;
 
   EventWithQuestions(
@@ -131,6 +133,7 @@ class EventWithQuestions {
       required this.updatedAt,
       required this.organizer,
       required this.tickets,
+      required this.questions,
       required this.registrationsCount});
 
   factory EventWithQuestions.fromJson(Map<String, dynamic> json) {
@@ -141,7 +144,7 @@ class EventWithQuestions {
         description: json["description"],
         location: json["location"],
         capacity: json["capacity"],
-        eventType: json["eventType"],
+        eventType: json["eventType"].toString(),
         startDateTime: DateTime.parse(json["startDateTime"]),
         endDateTime: DateTime.parse(json["endDateTime"]),
         status: json["status"],
@@ -152,6 +155,9 @@ class EventWithQuestions {
             lastName: json["organizer"]["lastName"]),
         tickets: json["tickets"]
             .map<Ticket>((ticket) => Ticket.fromJson(ticket))
+            .toList(),
+        questions: json["eventQuestions"]
+            .map<Question>((question) => Question.fromJson(question))
             .toList(),
         registrationsCount: json["_count"]["registrations"],);
   }

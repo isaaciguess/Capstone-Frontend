@@ -82,18 +82,18 @@ Future<Events?> getAllEvents() async {
   return null;
 }
 
-Future<EventWithQuestions?> getEventById(int id) async {
-   try { 
-
+Future<EventWithQuestions> getEventById(int id) async {
+  try {
+    print("ID: $id");
     final response = await dioClient.dio.get("/events/$id");
     if (response.data["success"]) {
       final responseData = response.data;
       EventWithQuestions event = EventWithQuestions.fromJson(responseData["data"]);
+      return event;
     } else {
-      print("Failed to get event ${response.data}");
+      throw Exception("Failed to get event: ${response.data}");
     }
   } catch (error) {
-    print("Error getting event $error");
+    throw Exception("Error getting event: $error");
   }
-  return null;
 }

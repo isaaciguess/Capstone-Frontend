@@ -38,9 +38,9 @@ class Question {
 class QuestionDetails {
   final int id;
   final String questionText;
-  final Enum questionType;
-  final String category;
-  final String validationRules;
+  final String questionType;
+  final String? category;
+  final String? validationRules;
   final DateTime createdAt;
   final DateTime updatedAt;
 

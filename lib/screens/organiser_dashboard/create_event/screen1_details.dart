@@ -1,4 +1,4 @@
-import 'package:first_app/screens/organiser_dashboard/ce_2_tickets.dart';
+import 'package:first_app/screens/organiser_dashboard/create_event/screen2_tickets.dart';
 import 'package:flutter/material.dart';
 import 'package:first_app/models/organizer.dart';
 

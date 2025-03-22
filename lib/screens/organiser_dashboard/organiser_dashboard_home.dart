@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:first_app/screens/organiser_dashboard/ce_1_create_event_page.dart';
+import 'package:first_app/screens/organiser_dashboard/create_event/screen1_details.dart';
 
 class OrganiserDashboard extends StatelessWidget {
   const OrganiserDashboard({super.key});

@@ -1,6 +1,6 @@
-import 'ce_4_create_questions_page.dart';
+import 'screen4_questions.dart';
 import 'package:flutter/material.dart';
-import 'create_registration_form_page.dart';
+import '../create_registration_form_page.dart';
 import 'package:first_app/models/ticket.dart';
 
 class EditBankInformationPage extends StatefulWidget {
